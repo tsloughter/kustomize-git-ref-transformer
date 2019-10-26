@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+shift
+
+if [ $# -eq 0 ]; then
+    echo "Name of image is required."
+    exit 1
+fi
+
+if ! [ -x "$(command -v jq)" ]; then
+    echo 'Error: jq is not installed.' >&2
+    exit 1
+fi
+
+if ! [ -x "$(command -v yq)" ]; then
+    echo 'Error: yq is not installed.' >&2
+    exit 1
+fi
+
+name=$1
+
+if [ $# -gt 2 ]; then
+    new_name=$2
+    git_arg=${3:-""}
+else
+    new_name=$name
+    git_arg=${2:-""}
+fi
+
+if [ "${git_arg}" == "short" ]; then
+    tag=$(git rev-parse --short HEAD)
+else
+    tag=$(git rev-parse HEAD)
+fi
+
+# yq converts multiple yaml documents into an array of json object
+# for each json object check it for an array of containers and if
+# it has one check each object in that array for the image name to
+# change the tag for
+yq r - -j -d '*' | jq ".[] | \
+   if (.spec.template.spec.containers | type == \"array\") then
+      .spec.template.spec.containers[] |=
+          if (.image | startswith(\"${name}:\")) or (.image == \"${name}\") then
+             .image = \"${new_name}:${tag}\"
+          else
+             .
+          end
+   else
+        .
+   end"
