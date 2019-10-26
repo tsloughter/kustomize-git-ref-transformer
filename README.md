@@ -14,10 +14,10 @@ Simplest usage:
 $ git clone https://github.com/tsloughter/kustomize-git-ref-transformer
 $ mkdir -p ~/.config/kustomize/plugin
 # link to subdirectory tsloughter in the clone of this repo
-$ ln -s <path to plugin clone>/tsloughter ~/.config/kustomize/plugin/tsloughter
+$ ln -s <path to dir of clone>/kustomize-git-ref-transformer/tsloughter ~/.config/kustomize/plugin/tsloughter
 ```
 
-And add the transformer to your kustomize resources:
+And add the transformer as `gitRefTransformer.yaml` to your kustomize resources:
 
 ``` yaml
 apiVersion: tsloughter/v1
