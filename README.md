@@ -10,8 +10,11 @@ Requires [jq](https://stedolan.github.io/jq/) and [yq](http://mikefarah.github.i
 Simplest usage:
 
 ``` shell
+# clone repo somewhere
+$ git clone https://github.com/tsloughter/kustomize-git-ref-transformer
 $ mkdir -p ~/.config/kustomize/plugin
-$ git clone https://github.com/tsloughter/kustomize-git-ref-transformer ~/.config/kustomize/plugin/tsloughter
+# link to subdirectory tsloughter in the clone of this repo
+$ ln -s <path to plugin clone>/tsloughter ~/.config/kustomize/plugin/tsloughter
 ```
 
 And add the transformer to your kustomize resources:
